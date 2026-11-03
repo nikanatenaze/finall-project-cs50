@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 // project includes
+#include <fileinfo.h>
 #include <filesystem.h>
 
 #define INPUT_SIZE 128
@@ -129,7 +130,28 @@ int main(void)
                 perror("Unable to go to parent directory");
             }
         }
-        
+        else if (strcmp(command, "info") == 0)
+        {
+            if (count < 2)
+            {
+                printf("Usage: info <path>\n");
+            }
+            else
+            {
+                fi_file_info(argument);
+            }
+        }
+        else if (strcmp(command, "open") == 0)
+        {
+            if (count < 2)
+            {
+                printf("Usage: open <path>\n");
+            }
+            else
+            {
+                fi_open_text(argument);
+            }
+        }
 
         // continues when no input
         else if (input[0] == '\0')
@@ -138,8 +160,9 @@ int main(void)
         }
         else
         {
-            printf("Unknown command: %s\n", input);
-            printf("Type 'help' to see available commands.\n");
+            continue;
+            // printf("Unknown command: %s\n", input);
+            // printf("Type 'help' to see available commands.\n");
         }
     }
 
