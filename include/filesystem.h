@@ -10,4 +10,8 @@ int fs_chdir(const char *path);
 
 int fs_list(const char *path);
 
+int fs_create_dir(const char *path);
+
+int fs_remove_dir(const char *path);
+
 #endif

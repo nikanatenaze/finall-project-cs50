@@ -1,20 +1,29 @@
-#include "../include/filesystem.h"
+#include "filesystem.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 
-// optimised for windows
+// optimised includes and definitions for windows
 #ifdef _WIN32
 
 #include <direct.h>
 #include <windows.h>
+#include <direct.h>
 
-// if not windows for linux
+#define CREATE_DIR(path) _mkdir(path)
+#define REMOVE_DIR(path) _rmdir(path)
+
+// optimised includes and definitions for linux
 #else
 
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
+
+#define REMOVE_DIR(path) rmdir(path)
+#define CREATE_DIR(path) mkdir(path, 0755)
 
 #endif
 
@@ -129,6 +138,27 @@ int fs_list(const char *path)
     closedir(directory);
 
 #endif
+
+    return 0;
+}
+
+// Creates directory
+int fs_create_dir(const char *path)
+{
+    if (CREATE_DIR(path) == 0)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+// Removes directory
+int fs_remove_dir(const char *path) {
+    if (REMOVE_DIR(path) == 0)
+    {
+        return 1;
+    }
 
     return 0;
 }

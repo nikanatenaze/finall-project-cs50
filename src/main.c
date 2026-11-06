@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 // project includes
 #include <fileinfo.h>
 #include <filesystem.h>
 
+// default input size in bytes
 #define INPUT_SIZE 128
 
+// displays help
 void display_help()
 {
     printf("\nAvailable commands:\n");
@@ -20,14 +23,25 @@ void display_help()
     printf("  exit       - Exit the application\n\n");
 }
 
+// displays wellcome title
 void display_title()
 {
-    printf("\n================================\n");
-    printf("  NICK'S MINI FILE EXPLORER\n");
-    printf("================================\n");
-    printf("Type 'help' to see available commands.\n\n");
+    printf("CS50 final project [Version: 0.0.1B]\n");
+    printf("Type 'help' to see available commands.\n");
+    printf("(c) Github: https://github.com/nikanatenaze\n");
 }
 
+// clears terminal (can be added in another file but here more comfortable)
+void clear_terminal(void)
+{
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+// main function
 int main(void)
 {
     // main Data:
@@ -36,13 +50,14 @@ int main(void)
     char argument[480];
     char cwd[4096];
 
-    // gets cwd for enterance title
+    // gets cwd
     if (fs_getcwd(cwd, sizeof(cwd)) == NULL)
     {
         perror("Unable to get current directory");
         return 1;
     }
 
+    clear_terminal();
     display_title();
 
     while (true)
@@ -55,6 +70,7 @@ int main(void)
         }
 
         // prints main line
+        printf("\n");
         printf("[M*] @ %s > ", cwd);
 
         if (fgets(input, sizeof(input), stdin) == NULL)
@@ -90,7 +106,7 @@ int main(void)
         {
             if (fs_getcwd(cwd, sizeof(cwd)) != NULL)
             {
-                printf("%s\n", cwd);
+                printf("Current working directory(cwd): %s\n", cwd);
             }
             else
             {
@@ -114,20 +130,53 @@ int main(void)
         }
         else if (strcmp(command, "ls") == 0)
         {
-            if (cwd[0] == '\n')
-            {
-                printf("Unable to display without arguments\n");
-            }
-            else
-            {
-                fs_list(".");
-            }
+            fs_list(".");
         }
         else if (strcmp(command, "back") == 0 || strcmp(command, "..") == 0)
         {
             if (fs_chdir("..") != 0)
             {
-                perror("Unable to go to parent directory");
+                perror("Unable to go to parent directory\n");
+            }
+        }
+        else if (strcmp(command, "rmdir") == 0)
+        {
+            if (argument[0] == '\0')
+            {
+                printf("Usage: mkdir <directory_name>\n");
+            }
+            else
+            {
+                if (fs_remove_dir(argument))
+                {
+                    continue;
+                }
+                else
+                {
+                    printf("Unable to remove directory");
+                }
+            }
+        }
+        else if (strcmp(command, "mkdir") == 0)
+        {
+            if (argument[0] == '\0')
+            {
+                printf("Usage: mkdir <directory_name>\n");
+            }
+            else
+            {
+                if (fs_create_dir(argument))
+                {
+                    continue;
+                }
+                else if (errno == EEXIST)
+                {
+                    printf("Directory already exists.\n");
+                }
+                else
+                {
+                    printf("Unable to create directory");
+                }
             }
         }
         else if (strcmp(command, "info") == 0)
@@ -141,7 +190,7 @@ int main(void)
                 fi_file_info(argument);
             }
         }
-        else if (strcmp(command, "open") == 0)
+        else if (strcmp(command, "opentxt") == 0)
         {
             if (count < 2)
             {
@@ -152,8 +201,12 @@ int main(void)
                 fi_open_text(argument);
             }
         }
-
+        else if (strcmp(command, "clear") == 0)
+        {
+            clear_terminal();
+        }
         // continues when no input
+        // not needed
         else if (input[0] == '\0')
         {
             continue;
