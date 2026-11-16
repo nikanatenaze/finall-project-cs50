@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 // project includes
+#include <process.h>
 #include <fileinfo.h>
 #include <filesystem.h>
 
@@ -12,15 +13,36 @@
 #define INPUT_SIZE 128
 
 // displays help
-void display_help()
+// displays help
+void display_help(void)
 {
-    printf("\nAvailable commands:\n");
-    printf("  help       - Show available commands\n");
-    printf("  pwd        - Show current directory\n");
-    printf("  ls         - List directory contents\n");
-    printf("  cd <path>  - Change directory\n");
-    printf("  back/..    - Go to parent directory\n");
-    printf("  exit       - Exit the application\n\n");
+    printf("\n========== AVAILABLE COMMANDS ==========\n\n");
+
+    printf(" General:\n");
+    printf("  help                  Show available commands\n");
+    printf("  clear                 Clear the terminal\n");
+    printf("  exit                  Exit the application\n\n");
+
+    printf(" Navigation:\n");
+    printf("  pwd                   Show current working directory\n");
+    printf("  ls                    List directory contents\n");
+    printf("  cd <path>             Change current directory\n");
+    printf("  back / ..             Go to parent directory\n\n");
+
+    printf(" File & Directory Management:\n");
+    printf("  mkdir <name>          Create a directory\n");
+    printf("  rmdir <name>          Remove an empty directory\n");
+    printf("  info <path>           Display file information\n");
+    printf("  opentxt <path>        Open and read a text file\n\n");
+
+    printf(" Process Management:\n");
+    printf("  run <program>         Launch an application\n");
+    printf("  processes             List running processes\n");
+    printf("  cpid                  Show current process ID\n");
+    printf("  pidi <PID>            Display process information\n");
+    printf("  end <PID>             Terminate a process\n");
+
+    printf("\n========================================\n");
 }
 
 // displays wellcome title
@@ -176,6 +198,76 @@ int main(void)
                 else
                 {
                     printf("Unable to create directory");
+                }
+            }
+        }
+        else if (strcmp(command, "run") == 0)
+        {
+            if (count < 2)
+            {
+                printf("Usage: run <application>\n");
+            }
+            else
+            {
+                ProcessID pid;
+
+                if (process_launch(argument, &pid) == 0)
+                {
+                    printf("Application started successfully!\n");
+                    printf("PID: %lu\n", (unsigned long)pid);
+                }
+            }
+        }
+        else if (strcmp(command, "processes") == 0)
+        {
+            show_processes();
+        }
+        else if (strcmp(command, "end") == 0)
+        {
+            if (argument[0] == '\0')
+            {
+                printf("Usage: end <PID>\n");
+            }
+            else
+            {
+                char *endptr;
+                long pid = strtol(argument, &endptr, 10);
+
+                // Validate that the entire argument is a positive number
+                if (argument == endptr || *endptr != '\0' || pid <= 0)
+                {
+                    printf("Invalid PID: '%s'\n", argument);
+                }
+                else
+                {
+                    endprocess((int)pid);
+                }
+            }
+        }
+        else if (strcmp(command, "cpid") == 0)
+        {
+            int cpid = get_cpid();
+            printf("PID of current process: %i\n", cpid);
+        }
+        else if (strcmp(command, "pidi") == 0)
+        {
+            if (argument[0] == '\0')
+            {
+                printf("Usage: pidi <PID>\n");
+            }
+            else
+            {
+                char *endptr;
+                long pid = strtol(argument, &endptr, 10);
+
+                // Validate that the entire argument is a positive number
+                if (argument == endptr || *endptr != '\0' || pid <= 0)
+                {
+                    printf("Invalid PID: '%s'\n", argument);
+                }
+                else
+                {
+                    process_info((int)pid);
                 }
             }
         }
