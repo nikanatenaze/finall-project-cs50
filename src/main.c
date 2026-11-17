@@ -1,8 +1,9 @@
 // global includes
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 // project includes
 #include <process.h>
@@ -64,7 +65,7 @@ void clear_terminal(void)
 }
 
 // main function
-int main(void)
+int main(int argc, char *argv[])
 {
     // main Data:
     char input[INPUT_SIZE];
@@ -73,7 +74,21 @@ int main(void)
     char cwd[4096];
 
     // gets cwd
-    if (fs_getcwd(cwd, sizeof(cwd)) == NULL)
+    if (argc > 1)
+    {
+        if (!is_valid_directory(argv[1]))
+        {
+            fprintf(stderr, "Error: Invalid directory: %s\n", argv[1]);
+            return 1;
+        }
+
+        if (fs_chdir(argv[1]) != 0)
+        {
+            perror("Unable to change starting directory");
+            return 1;
+        }
+    }
+    else if (fs_getcwd(cwd, sizeof(cwd)) == NULL)
     {
         perror("Unable to get current directory");
         return 1;

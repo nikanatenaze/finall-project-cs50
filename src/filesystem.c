@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
+#include <stddef.h>
 #include <sys/stat.h>
 
 // optimised includes and definitions for windows
@@ -11,6 +13,8 @@
 #include <windows.h>
 #include <direct.h>
 
+#define stat _stat
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #define CREATE_DIR(path) _mkdir(path)
 #define REMOVE_DIR(path) _rmdir(path)
 
@@ -26,6 +30,20 @@
 #define CREATE_DIR(path) mkdir(path, 0755)
 
 #endif
+
+// checks validity of path
+bool is_valid_directory(const char *path) {
+    if (path == NULL || path[0] == '\0') {
+        return false;
+    }
+
+    struct stat info;
+    if (stat(path, &info) != 0) {
+        return false;
+    }
+
+    return S_ISDIR(info.st_mode);
+}
 
 // gets current working dir
 char *fs_getcwd(char *buffer, size_t size)
@@ -154,7 +172,8 @@ int fs_create_dir(const char *path)
 }
 
 // Removes directory
-int fs_remove_dir(const char *path) {
+int fs_remove_dir(const char *path)
+{
     if (REMOVE_DIR(path) == 0)
     {
         return 1;
