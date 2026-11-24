@@ -1,36 +1,36 @@
-# Nick's Mini File Explorer
+# 🗂️ Nick's Mini File Explorer
 
 A command-line file explorer written in **C** as my CS50 final project. It provides an interactive terminal interface for navigating directories, inspecting files, managing folders, and working with system processes.
 
 The project is designed with separate modules for filesystem operations, file information, and process management, with platform-specific implementations for **Windows and Linux**.
 
-## Features
+## ✨ Features
 
-### Directory navigation
+### 📁 Directory navigation
 - Display the current working directory with `pwd`
 - List files and folders with `ls`
 - Move to another directory with `cd <path>`
 - Return to the parent directory with `back` or `..`
 
-### File and directory management
+### 📄 File and directory management
 - Create a directory with `mkdir <name>`
 - Remove an empty directory with `rmdir <name>`
 - Display file or directory information with `info <path>`
 - Read a text file in the terminal with `opentxt <path>`
 
-### Process management
+### ⚙️ Process management
 - Launch an application with `run <program>`
 - List running processes with `processes`
 - Display the current process ID with `cpid`
 - Inspect a process with `pidi <PID>`
 - Terminate a process with `end <PID>`
 
-### Terminal
+### 💻 Terminal
 - Display the command list with `help`
 - Clear the terminal with `clear`
 - Exit the application with `exit`
 
-## Project structure
+## 🏗️ Project structure
 
 ```text
 finall-project-cs50/
@@ -51,14 +51,14 @@ finall-project-cs50/
 - **fileinfo.c** — file metadata and text-file reading
 - **process.c** — process launching, listing, inspection, and termination
 
-## Requirements
+## 🛠️ Requirements
 
 - A C compiler, such as GCC
 - Windows or Linux
 
 Some functionality uses operating-system-specific APIs. The source code selects the relevant implementation at compile time using `_WIN32`.
 
-## Build
+## 🚀 Build
 
 Compile the source files from the project root with GCC:
 
@@ -81,7 +81,7 @@ Then run the executable:
 
 **Windows**
 ```powershell
-.\mini-explorer.exe
+.\\mini-explorer.exe
 ```
 
 You can optionally provide a starting directory:
@@ -92,7 +92,7 @@ You can optionally provide a starting directory:
 
 On Windows, pass a Windows directory path instead.
 
-## Usage
+## 🧭 Usage
 
 Start the program and enter `help` to see all available commands.
 
@@ -107,7 +107,7 @@ Example session:
 [M*] @ /home/user > exit
 ```
 
-## About the project
+## 🎓 About the project
 
 This project was developed as the final project for **CS50x**. Its goal is to apply C programming concepts to a practical command-line application, including modular code organization, file and directory operations, process management, and interaction with operating-system APIs.
 
